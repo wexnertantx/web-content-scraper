@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
-import { analyzeWebsiteFlow, runScrape } from '@/services/scraping'
+import { analyzeWebsiteFlow, runScrape, startCrawlFlow } from '@/services/scraping'
 import { createProject } from '@/services/projects'
 import type { ExtractionField, ScrapeMode, WebsiteAnalysis } from '@/types/types'
 import { BASIC_CONTENT_FIELDS } from '@/utils/constants'
@@ -26,6 +26,10 @@ const ANALYZE_MESSAGES = [
 ]
 
 const RUN_MESSAGES = ['Extracting data...', 'Talking to Firecrawl...', 'Saving results...']
+const CRAWL_START_MESSAGES = ['Starting the site crawl...', 'Discovering pages via the sitemap...']
+
+const DEFAULT_CRAWL_LIMIT = 25
+const MAX_CRAWL_LIMIT = 100
 
 function useRotatingMessage(messages: string[], active: boolean, intervalMs = 2200): string {
   const [index, setIndex] = useState(0)
@@ -84,6 +88,7 @@ export function NewScrape() {
   const [structuredFields, setStructuredFields] = useState<ExtractionField[]>([])
   const [entityType, setEntityType] = useState('')
   const [customPrompt, setCustomPrompt] = useState('')
+  const [crawlLimit, setCrawlLimit] = useState(DEFAULT_CRAWL_LIMIT)
   const [projectName, setProjectName] = useState('')
   const [configError, setConfigError] = useState<string | null>(null)
 
@@ -93,7 +98,7 @@ export function NewScrape() {
   const [runError, setRunError] = useState<string | null>(null)
 
   const analyzeMessage = useRotatingMessage(ANALYZE_MESSAGES, analyzing)
-  const runMessage = useRotatingMessage(RUN_MESSAGES, running)
+  const runMessage = useRotatingMessage(mode === 'crawl' ? CRAWL_START_MESSAGES : RUN_MESSAGES, running)
 
   async function handleAnalyze(e: FormEvent) {
     e.preventDefault()
@@ -144,6 +149,19 @@ export function NewScrape() {
         setProjectId(pid)
       }
 
+      if (mode === 'crawl') {
+        await startCrawlFlow({
+          projectId: pid,
+          url: normalizedUrl,
+          limit: crawlLimit,
+          entityType: entityType.trim() || undefined,
+          fields: structuredFields.filter((field) => field.name.trim().length > 0),
+        })
+        // The crawl runs in the background; ProjectDetails polls it to completion.
+        navigate(`/projects/${pid}`)
+        return
+      }
+
       const fieldsToSubmit: ExtractionField[] =
         mode === 'basic'
           ? BASIC_CONTENT_FIELDS
@@ -174,12 +192,19 @@ export function NewScrape() {
       setConfigError('Give your project a name.')
       return
     }
-    if (mode === 'structured' && structuredFields.filter((f) => f.name.trim()).length === 0) {
+    if (
+      (mode === 'structured' || mode === 'crawl') &&
+      structuredFields.filter((f) => f.name.trim()).length === 0
+    ) {
       setConfigError('Add at least one field to extract.')
       return
     }
     if (mode === 'custom' && !customPrompt.trim()) {
       setConfigError('Describe what you want to extract.')
+      return
+    }
+    if (mode === 'crawl' && (crawlLimit < 1 || crawlLimit > MAX_CRAWL_LIMIT)) {
+      setConfigError(`Max pages must be between 1 and ${MAX_CRAWL_LIMIT}.`)
       return
     }
 
@@ -274,7 +299,7 @@ export function NewScrape() {
                 </p>
               )}
 
-              {mode === 'structured' && (
+              {(mode === 'structured' || mode === 'crawl') && (
                 <div className="flex flex-col gap-4 rounded-md border border-border p-4">
                   <div className="flex flex-col gap-1.5">
                     <Label htmlFor="entityType">Entity type</Label>
@@ -289,6 +314,24 @@ export function NewScrape() {
                     <Label>Fields to extract</Label>
                     <FieldEditor fields={structuredFields} onChange={setStructuredFields} />
                   </div>
+                  {mode === 'crawl' && (
+                    <div className="flex flex-col gap-1.5">
+                      <Label htmlFor="crawlLimit">Max pages</Label>
+                      <Input
+                        id="crawlLimit"
+                        type="number"
+                        min={1}
+                        max={MAX_CRAWL_LIMIT}
+                        value={crawlLimit}
+                        onChange={(e) => setCrawlLimit(Number(e.target.value))}
+                        className="w-32"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Firecrawl will follow this site's sitemap and extract the same fields from up
+                        to this many pages. Larger sites take longer and use more Firecrawl credits.
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -329,7 +372,7 @@ export function NewScrape() {
               Back
             </Button>
             <Button type="submit" variant="accent">
-              Run Scrape
+              {mode === 'crawl' ? 'Start Crawl' : 'Run Scrape'}
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>

@@ -20,5 +20,21 @@ Export: CSV, JSON, Markdown
 
 Database schema + Row Level Security policies (`supabase/migrations/0001_init.sql`)
 
-Not yet done: verification against live Supabase/OpenAI/Firecrawl credentials,
-Vercel deployment.
+Verified end-to-end against live Supabase, OpenAI, and Firecrawl credentials.
+
+Not yet done: Vercel deployment.
+
+---
+
+v0.2.0
+
+Site Crawl mode: follows a site's sitemap and applies the same extraction
+fields to every page found, via an async Firecrawl crawl job
+
+New edge functions: `firecrawl-crawl-start`, `firecrawl-crawl-status`
+
+`scrape_runs.crawl_job_id` column + `crawling` status
+(`supabase/migrations/0002_crawl.sql`)
+
+ProjectDetails polls crawl progress ("Crawled X of Y pages...") and finalizes
+the run automatically

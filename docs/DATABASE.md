@@ -35,10 +35,11 @@ by a trigger (`handle_new_user`) when a user signs up.
 | --- | --- | --- |
 | id | uuid, PK | |
 | project_id | uuid | References `projects(id)` |
-| status | text | `pending` \| `running` \| `success` \| `failed` |
+| status | text | `pending` \| `running` \| `crawling` \| `success` \| `failed` |
 | started_at | timestamptz | |
 | completed_at | timestamptz | Nullable |
 | summary | text | AI-generated or error summary |
+| crawl_job_id | text | Nullable. Firecrawl's async crawl job id, set only for "Site Crawl" mode runs; polled via `firecrawl-crawl-status` until terminal (see `supabase/migrations/0002_crawl.sql`, DECISIONS.md Decision 8) |
 
 ## scraped_results
 

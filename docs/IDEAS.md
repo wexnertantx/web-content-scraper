@@ -18,3 +18,13 @@ Add new feature ideas here.
   functions (auto project naming, result explanation in plain English, export
   description, scrape quality check) if user feedback asks for them. See
   DECISIONS.md, Decision 4.
+- Persist Site Crawl config (limit/entityType/fields) so "Re-run Scrape" can
+  repeat a crawl exactly, same as the existing gap for Structured/Custom
+  single-page scrapes. See DECISIONS.md, Decision 8.
+- Add a hard cap on total Firecrawl credit spend for Site Crawl, independent
+  of the per-run page `limit` (e.g. a per-user monthly crawl budget).
+- Investigate the production JS bundle jumping from ~333 KB to ~538 KB
+  (minified) after the crawl feature was added, despite no new npm
+  dependencies — likely a tree-shaking/chunking quirk worth profiling
+  (`build.rolldownOptions.output.codeSplitting` or dynamic `import()` per
+  CLAUDE.md's "keep bundle size small" goal), not a functional bug.

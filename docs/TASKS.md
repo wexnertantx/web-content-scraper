@@ -4,16 +4,15 @@
 
 Project Status
 
-🟡 In Development — MVP feature-complete, pending real API keys + deployment
+🟡 In Development — MVP verified end-to-end against live Supabase/OpenAI/Firecrawl, pending deployment
 
 ---
 
 # Current Milestone
 
-Milestone 2
+Milestone 3
 
-Configure real Supabase/OpenAI/Firecrawl credentials, verify end-to-end against
-live APIs, deploy to Vercel
+Deploy to Vercel
 
 ---
 
@@ -44,6 +43,7 @@ live APIs, deploy to Vercel
 - [x] Firecrawl Integration
 - [x] Loading Indicator
 - [x] Error Handling
+- [x] Site Crawl mode (sitemap-based, async, progress polling) — post-MVP addition, see DECISIONS.md Decision 8
 
 ---
 
@@ -108,11 +108,10 @@ verified against live API keys or deployed.
 
 # Known Issues
 
-- No real Supabase project, OpenAI key, or Firecrawl key has been wired up yet
-  — the app has not been exercised against live APIs. Env vars are documented
-  in `.env.example`; edge function secrets need to be set with
-  `supabase secrets set` before anything works end-to-end.
 - Not yet deployed to Vercel.
+- Site Crawl mode has no exact re-run (re-run always falls back to Basic
+  Content, per Decision 7) and no hard ceiling on Firecrawl credit spend
+  beyond the per-run page limit. See IDEAS.md.
 
 ---
 
@@ -135,13 +134,13 @@ See RELEASE_CHECKLIST.md.
 Before MVP Release
 
 - [x] All pages responsive
-- [x] Authentication working (pending live Supabase project to verify)
-- [x] Firecrawl working (pending live API key to verify)
-- [x] OpenAI working (pending live API key to verify)
+- [x] Authentication working (verified against a live Supabase project)
+- [x] Firecrawl working (verified against a live API key)
+- [x] OpenAI working (verified against a live API key)
 - [x] Projects saved
 - [x] Export working
 - [x] Error handling complete
-- [ ] Environment variables configured (real values, not placeholders)
+- [x] Environment variables configured (local dev)
 - [ ] Deployment successful
 
 ---

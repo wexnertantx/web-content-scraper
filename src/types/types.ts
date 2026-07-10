@@ -4,7 +4,7 @@ export interface AppUser {
   fullName: string
 }
 
-export type ScrapeMode = 'basic' | 'structured' | 'custom'
+export type ScrapeMode = 'basic' | 'structured' | 'custom' | 'crawl'
 
 export type ExtractionFieldType =
   | 'text'
@@ -41,7 +41,7 @@ export interface Project {
   updatedAt: string
 }
 
-export type ScrapeRunStatus = 'pending' | 'running' | 'success' | 'failed'
+export type ScrapeRunStatus = 'pending' | 'running' | 'crawling' | 'success' | 'failed'
 
 export interface ScrapeRun {
   id: string
@@ -50,6 +50,20 @@ export interface ScrapeRun {
   startedAt: string
   completedAt: string | null
   summary: string | null
+  crawlJobId: string | null
+}
+
+export interface CrawlPage {
+  url: string
+  data: unknown
+  markdown: string
+}
+
+export interface CrawlStatusResult {
+  status: 'scraping' | 'completed' | 'failed' | 'cancelled'
+  total: number
+  completed: number
+  pages?: CrawlPage[]
 }
 
 export interface ScrapedResult {

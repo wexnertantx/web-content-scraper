@@ -1,4 +1,4 @@
-import { FileText, Sparkles, Table } from 'lucide-react'
+import { FileText, Globe, Sparkles, Table } from 'lucide-react'
 import type { ScrapeMode } from '@/types/types'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
@@ -28,6 +28,12 @@ const MODE_OPTIONS: {
     description: 'Describe what to extract in plain English.',
     icon: Sparkles,
   },
+  {
+    mode: 'crawl',
+    title: 'Site Crawl (sitemap)',
+    description: 'Follow the sitemap and extract the same fields from every page found. Runs in the background.',
+    icon: Globe,
+  },
 ]
 
 interface ModeSelectorProps {
@@ -38,7 +44,7 @@ interface ModeSelectorProps {
 
 export function ModeSelector({ value, onChange, recommended }: ModeSelectorProps) {
   return (
-    <div role="radiogroup" aria-label="Extraction mode" className="grid gap-3 sm:grid-cols-3">
+    <div role="radiogroup" aria-label="Extraction mode" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {MODE_OPTIONS.map(({ mode, title, description, icon: Icon }) => {
         const selected = value === mode
         return (

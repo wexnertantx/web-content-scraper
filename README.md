@@ -48,6 +48,7 @@ The first release focuses only on validating the core product idea.
 * AI Extraction Suggestions
 * Firecrawl Integration
 * Save Scraped Results
+* Site Crawl (sitemap-based, extracts the same fields across every page found, runs asynchronously)
 
 ### Project Management
 
@@ -150,11 +151,13 @@ OpenAI, or Firecrawl credentials, and has not been deployed. See
 1. Install dependencies: `npm install`
 2. Copy `.env.example` to `.env` and fill in `VITE_SUPABASE_URL` and
    `VITE_SUPABASE_ANON_KEY` from your Supabase project.
-3. Apply the database schema: run `supabase/migrations/0001_init.sql` against
-   your Supabase project (via `supabase db push` or the SQL editor).
+3. Apply the database schema: run the migrations in `supabase/migrations/`
+   (`0001_init.sql`, then `0002_crawl.sql`) against your Supabase project
+   (via `supabase db push` or the SQL editor).
 4. Deploy the Supabase Edge Functions in `supabase/functions/` (`firecrawl-scrape`,
-   `firecrawl-extract`, `openai-analyze`, `openai-extract-fields`), and set
-   their secrets — `OPENAI_API_KEY`, `OPENAI_MODEL`, `FIRECRAWL_API_KEY` — with
+   `firecrawl-extract`, `firecrawl-crawl-start`, `firecrawl-crawl-status`,
+   `openai-analyze`, `openai-extract-fields`), and set their secrets —
+   `OPENAI_API_KEY`, `OPENAI_MODEL`, `FIRECRAWL_API_KEY` — with
    `supabase secrets set`. These must **not** be prefixed with `VITE_`; that
    prefix is what tells Vite to inline a variable into the client bundle, and
    these two keys must stay server-side. See `docs/DECISIONS.md`, Decision 3.

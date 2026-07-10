@@ -92,3 +92,45 @@ paragraphs, links, images). Re-running a Structured Data or Custom Prompt
 scrape with its original configuration requires going through New Scrape
 again for now. Persisting the original run config for exact re-runs is
 tracked in IDEAS.md.
+
+## Decision 8 — Full-site crawl via async Firecrawl `/v1/crawl` + client-side polling
+
+Added a 4th scrape mode, "Site Crawl (sitemap)", which follows a site's
+sitemap (Firecrawl's `sitemap: "include"` option on `/v1/crawl`) and applies
+the same extraction fields to every discovered page, capped at a
+user-set `limit` (default 25, max 100 — crawl responses can be very large,
+so an unbounded crawl isn't offered).
+
+Firecrawl's crawl endpoint is asynchronous: `POST /v1/crawl` returns a job
+`id` immediately, and `GET /v1/crawl/{id}` is polled until the job reaches a
+terminal state (`completed`/`failed`/`cancelled`). This doesn't fit the
+synchronous "call an edge function, get a result" pattern the other three
+modes use, so:
+
+- Two new edge functions: `firecrawl-crawl-start` (starts the job, returns
+  `jobId`) and `firecrawl-crawl-status` (checks progress, returns pages once
+  complete).
+- `scrape_runs` gained a `crawl_job_id` column and a new `crawling` status
+  (`supabase/migrations/0002_crawl.sql`).
+- `services/scraping.ts` exposes `startCrawlFlow()` (kicks off the job,
+  creates the run) and `pollCrawl()` (checks status; on a terminal state,
+  saves the result and marks the run success/failed — safe to call
+  repeatedly, since it no-ops if a result row already exists or the run is
+  no longer `crawling`).
+- `ProjectDetails` polls `pollCrawl()` every 4s via `setInterval` while the
+  selected run is `crawling`, showing "Crawled X of Y pages..." progress,
+  and stops once the run reaches success/failed. The New Scrape wizard
+  itself doesn't wait for the crawl to finish — it starts the job and
+  navigates straight to the project page, since a crawl can take much
+  longer than a single-page scrape.
+- Each crawled page's extracted fields are flattened into
+  `{ sourceUrl, ...fields }` rows (rather than nested `{url, data}` objects)
+  so the existing CSV export — built for a flat array of objects — works
+  unchanged. Markdown export gets all pages concatenated under `## <url>`
+  headers.
+
+Not handled: exact re-run of a crawl (Decision 7's Basic Content re-run
+still applies), a hard ceiling on Firecrawl credit spend beyond the page
+`limit`, and the small race if the same run is polled from two open tabs
+simultaneously (mitigated by checking for an existing result row before
+saving, but not fully locked).

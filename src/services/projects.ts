@@ -24,6 +24,7 @@ interface ScrapeRunRow {
   started_at: string
   completed_at: string | null
   summary: string | null
+  crawl_job_id: string | null
 }
 
 interface ScrapedResultRow {
@@ -53,6 +54,7 @@ function mapRun(row: ScrapeRunRow): ScrapeRun {
     startedAt: row.started_at,
     completedAt: row.completed_at,
     summary: row.summary,
+    crawlJobId: row.crawl_job_id,
   }
 }
 
@@ -131,6 +133,17 @@ export async function createScrapeRun(projectId: string): Promise<ScrapeRun> {
     .single()
 
   if (error || !data) throw new Error('Could not start the scrape. Please try again.')
+  return mapRun(data as ScrapeRunRow)
+}
+
+export async function createCrawlRun(projectId: string, crawlJobId: string): Promise<ScrapeRun> {
+  const { data, error } = await supabase
+    .from('scrape_runs')
+    .insert({ project_id: projectId, status: 'crawling' satisfies ScrapeRunStatus, crawl_job_id: crawlJobId })
+    .select()
+    .single()
+
+  if (error || !data) throw new Error('Could not start the site crawl. Please try again.')
   return mapRun(data as ScrapeRunRow)
 }
 

@@ -1,5 +1,5 @@
 import { supabase } from '@/services/supabase'
-import type { ExtractionField } from '@/types/types'
+import type { CrawlStatusResult, ExtractionField } from '@/types/types'
 
 export interface ScrapedPage {
   markdown: string
@@ -35,4 +35,35 @@ export async function extractStructuredData(input: ExtractInput): Promise<unknow
   }
 
   return (data as { jsonData: unknown }).jsonData
+}
+
+export interface StartCrawlInput {
+  url: string
+  limit: number
+  entityType?: string
+  fields: ExtractionField[]
+}
+
+export async function startCrawl(input: StartCrawlInput): Promise<string> {
+  const { data, error } = await supabase.functions.invoke('firecrawl-crawl-start', {
+    body: input,
+  })
+
+  if (error) {
+    throw new Error('Could not start the site crawl. Please try again.')
+  }
+
+  return (data as { jobId: string }).jobId
+}
+
+export async function checkCrawlStatus(jobId: string): Promise<CrawlStatusResult> {
+  const { data, error } = await supabase.functions.invoke('firecrawl-crawl-status', {
+    body: { jobId },
+  })
+
+  if (error) {
+    throw new Error('Could not check the crawl status.')
+  }
+
+  return data as CrawlStatusResult
 }
