@@ -3,6 +3,9 @@ import { corsHeaders, jsonResponse } from '../_shared/cors.ts'
 const FIRECRAWL_API_KEY = Deno.env.get('FIRECRAWL_API_KEY')
 const DEFAULT_LIMIT = 25
 const MAX_LIMIT = 100
+// Depth 0 is the entered URL (and sitemap URLs); each level adds one hop of
+// discovered links.
+const MAX_DISCOVERY_DEPTH = 3
 
 interface ExtractionField {
   name: string
@@ -66,6 +69,10 @@ Deno.serve(async (req) => {
         url: body.url,
         limit,
         sitemap: 'include',
+        // Without this, Firecrawl only follows child URLs of the entered
+        // path, so a crawl started on an inner page scrapes just that page.
+        crawlEntireDomain: true,
+        maxDiscoveryDepth: MAX_DISCOVERY_DEPTH,
         scrapeOptions: {
           onlyMainContent: true,
           // v2 embeds schema/prompt directly in the format entry; there is
