@@ -6,6 +6,19 @@ Version: 1.0
 
 ---
 
+# Implementation Note (MVP)
+
+Prompts 1, 3, 4, and 6 below are implemented as a single combined system
+prompt in `supabase/functions/openai-analyze/index.ts` (one OpenAI call
+instead of four). Prompt 5 is implemented as-is in
+`supabase/functions/openai-extract-fields/index.ts`. Prompts 2, 7, 8, 9, 10
+are not wired into the MVP — see `docs/DECISIONS.md`, Decision 4, for why and
+`docs/IDEAS.md` for revisiting them. The model id "GPT-5.5" below is not a
+real OpenAI model; the edge functions default to `gpt-4o-mini` via an
+`OPENAI_MODEL` secret.
+
+---
+
 # Purpose
 
 This document contains all AI prompts used by the Website Content Scraper.

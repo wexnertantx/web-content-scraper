@@ -136,9 +136,29 @@ The following documents define the project and should be treated as the source o
 
 **Version:** 0.1.0
 
-**Phase:** Project Planning & Initial Development
+**Phase:** MVP feature-complete, pending live API keys and deployment
 
-The application is currently in the setup and architecture phase.
+All MVP features described above are implemented against the documented
+architecture. The app has not yet been exercised against real Supabase,
+OpenAI, or Firecrawl credentials, and has not been deployed. See
+`docs/TASKS.md` for the current checklist.
+
+---
+
+## Setup
+
+1. Install dependencies: `npm install`
+2. Copy `.env.example` to `.env` and fill in `VITE_SUPABASE_URL` and
+   `VITE_SUPABASE_ANON_KEY` from your Supabase project.
+3. Apply the database schema: run `supabase/migrations/0001_init.sql` against
+   your Supabase project (via `supabase db push` or the SQL editor).
+4. Deploy the Supabase Edge Functions in `supabase/functions/` (`firecrawl-scrape`,
+   `firecrawl-extract`, `openai-analyze`, `openai-extract-fields`), and set
+   their secrets — `OPENAI_API_KEY`, `OPENAI_MODEL`, `FIRECRAWL_API_KEY` — with
+   `supabase secrets set`. These must **not** be prefixed with `VITE_`; that
+   prefix is what tells Vite to inline a variable into the client bundle, and
+   these two keys must stay server-side. See `docs/DECISIONS.md`, Decision 3.
+5. Run the dev server: `npm run dev`
 
 ---
 
