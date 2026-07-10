@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: 'A crawl job id is required.' }, 400)
     }
 
-    const response = await fetch(`https://api.firecrawl.dev/v1/crawl/${jobId}`, {
+    const response = await fetch(`https://api.firecrawl.dev/v2/crawl/${jobId}`, {
       headers: { Authorization: `Bearer ${FIRECRAWL_API_KEY}` },
     })
 

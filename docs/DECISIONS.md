@@ -63,14 +63,30 @@ model id. Edge functions default to `gpt-4o-mini` via a configurable
 `OPENAI_MODEL` secret — update PROMPTS.md and the secret once a target model
 is confirmed.
 
-## Decision 5 — Firecrawl v1 `/scrape` with `formats: ["json"]` + `jsonOptions`, not a separate `/extract` endpoint
+## Decision 5 — Firecrawl `/v2/scrape` with `formats: [{ type: "json", schema, prompt }]`, not a separate `/extract` endpoint
 
-Verified against Firecrawl's current API surface (not just training data):
-structured extraction uses `POST /v1/scrape` with `formats: ["json"]` and
-`jsonOptions: { prompt, schema }`, not the older `extract` format/field some
-docs describe. `firecrawl-extract` builds a JSON Schema from the user's
-selected fields (array schema when `entityType` is set, for repeating
-records; object schema otherwise).
+Structured extraction uses `POST /v2/scrape` with a `json`-type entry inside
+the `formats` array (schema + prompt embedded directly in that entry), not a
+separate `/extract` endpoint. `firecrawl-extract` builds a JSON Schema from
+the user's selected fields (array schema when `entityType` is set, for
+repeating records; object schema otherwise).
+
+**Amendment (found via live testing, not caught by initial API verification):**
+this was originally implemented against Firecrawl's v1 shape —
+`POST /v1/scrape` with `formats: ["json"]` and a sibling `jsonOptions: {
+prompt, schema }` field. Firecrawl has since fully moved to v2, where
+`jsonOptions` no longer exists at all; testing against a live key returned
+`"Unrecognized key in body -- please review the v2 API documentation"`. All
+four Firecrawl edge functions (`firecrawl-scrape`, `firecrawl-extract`,
+`firecrawl-crawl-start`, `firecrawl-crawl-status`) were updated to call
+`/v2/...` and, where JSON extraction is used, to nest `schema`/`prompt`
+inside the relevant `formats` array entry (`{ type: 'json', schema, prompt
+}`) instead of a top-level `jsonOptions`. Response shape is unchanged —
+extracted data is still returned at `data.json`. Lesson: an MCP tool's
+parameter schema (used for the initial verification) reflects the tool's
+own interface, not necessarily the current raw HTTP wire format — worth
+checking the actual API docs/a live call for anything wire-format-sensitive
+like this.
 
 ## Decision 6 — Tailwind CSS v4 via the Vite plugin, no shadcn CLI
 
@@ -101,8 +117,8 @@ the same extraction fields to every discovered page, capped at a
 user-set `limit` (default 25, max 100 — crawl responses can be very large,
 so an unbounded crawl isn't offered).
 
-Firecrawl's crawl endpoint is asynchronous: `POST /v1/crawl` returns a job
-`id` immediately, and `GET /v1/crawl/{id}` is polled until the job reaches a
+Firecrawl's crawl endpoint is asynchronous: `POST /v2/crawl` returns a job
+`id` immediately, and `GET /v2/crawl/{id}` is polled until the job reaches a
 terminal state (`completed`/`failed`/`cancelled`). This doesn't fit the
 synchronous "call an edge function, get a result" pattern the other three
 modes use, so:

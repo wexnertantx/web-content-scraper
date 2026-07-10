@@ -55,7 +55,7 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: 'A URL and at least one field are required.' }, 400)
     }
 
-    const response = await fetch('https://api.firecrawl.dev/v1/scrape', {
+    const response = await fetch('https://api.firecrawl.dev/v2/scrape', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${FIRECRAWL_API_KEY}`,
@@ -63,12 +63,16 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         url: body.url,
-        formats: ['json'],
         onlyMainContent: true,
-        jsonOptions: {
-          prompt: buildPrompt(body),
-          schema: buildJsonSchema(body),
-        },
+        // v2 embeds schema/prompt directly in the format entry; there is no
+        // separate jsonOptions field like in v1.
+        formats: [
+          {
+            type: 'json',
+            schema: buildJsonSchema(body),
+            prompt: buildPrompt(body),
+          },
+        ],
       }),
     })
 

@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
 
     const limit = Math.min(Math.max(body.limit ?? DEFAULT_LIMIT, 1), MAX_LIMIT)
 
-    const response = await fetch('https://api.firecrawl.dev/v1/crawl', {
+    const response = await fetch('https://api.firecrawl.dev/v2/crawl', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${FIRECRAWL_API_KEY}`,
@@ -67,12 +67,17 @@ Deno.serve(async (req) => {
         limit,
         sitemap: 'include',
         scrapeOptions: {
-          formats: ['markdown', 'json'],
           onlyMainContent: true,
-          jsonOptions: {
-            prompt: buildPrompt(body),
-            schema: buildJsonSchema(body),
-          },
+          // v2 embeds schema/prompt directly in the format entry; there is
+          // no separate jsonOptions field like in v1.
+          formats: [
+            'markdown',
+            {
+              type: 'json',
+              schema: buildJsonSchema(body),
+              prompt: buildPrompt(body),
+            },
+          ],
         },
       }),
     })

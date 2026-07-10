@@ -38,3 +38,8 @@ New edge functions: `firecrawl-crawl-start`, `firecrawl-crawl-status`
 
 ProjectDetails polls crawl progress ("Crawled X of Y pages...") and finalizes
 the run automatically
+
+Fixed: all Firecrawl edge functions were calling the deprecated v1 API shape
+(`jsonOptions` sibling field); migrated to v2's `formats: [{ type: 'json',
+schema, prompt }]` after live testing surfaced a "Unrecognized key in body"
+error. See DECISIONS.md, Decision 5 amendment.

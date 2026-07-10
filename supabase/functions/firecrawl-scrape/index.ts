@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: 'A website URL is required.' }, 400)
     }
 
-    const response = await fetch('https://api.firecrawl.dev/v1/scrape', {
+    const response = await fetch('https://api.firecrawl.dev/v2/scrape', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${FIRECRAWL_API_KEY}`,
