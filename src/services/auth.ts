@@ -26,6 +26,10 @@ function toAppUser(user: SupabaseUserLike): AppUser {
   }
 }
 
+export function toAppUserOrNull(user: SupabaseUserLike | null | undefined): AppUser | null {
+  return user ? toAppUser(user) : null
+}
+
 export async function registerUser({ fullName, email, password }: RegisterInput): Promise<AppUser> {
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -42,7 +46,12 @@ export async function registerUser({ fullName, email, password }: RegisterInput)
 export async function loginUser({ email, password }: LoginInput): Promise<AppUser> {
   const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
-  if (error) throw new Error('Invalid email or password.')
+  if (error) {
+    if (error.code === 'email_not_confirmed') {
+      throw new Error(`Please verify your email, there has been an email sent to ${email}`)
+    }
+    throw new Error('Invalid email or password.')
+  }
   if (!data.user) throw new Error('Login failed. Please try again.')
 
   return toAppUser(data.user)
@@ -51,10 +60,4 @@ export async function loginUser({ email, password }: LoginInput): Promise<AppUse
 export async function logoutUser(): Promise<void> {
   const { error } = await supabase.auth.signOut()
   if (error) throw new Error('Could not sign out. Please try again.')
-}
-
-export async function getCurrentUser(): Promise<AppUser | null> {
-  const { data, error } = await supabase.auth.getUser()
-  if (error || !data.user) return null
-  return toAppUser(data.user)
 }
