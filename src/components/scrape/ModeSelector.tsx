@@ -61,17 +61,26 @@ export function ModeSelector({ value, onChange, recommended }: ModeSelectorProps
               }
             }}
             className={cn(
-              'cursor-pointer transition-colors hover:border-primary/50',
-              selected && 'border-primary ring-2 ring-primary/20',
+              'cursor-pointer transition-all duration-200 hover:border-primary/50 hover:shadow-[var(--shadow-md)]',
+              selected
+                ? 'border-primary bg-primary/5 shadow-[var(--shadow-md)] ring-2 ring-primary/20'
+                : 'ring-2 ring-transparent',
             )}
           >
             <CardContent className="flex flex-col gap-2 p-4">
               <div className="flex items-center justify-between">
-                <Icon className="h-5 w-5 text-primary" />
+                <div
+                  className={cn(
+                    'flex h-9 w-9 items-center justify-center rounded-[var(--radius-md)] transition-colors duration-200',
+                    selected ? 'bg-primary text-primary-foreground' : 'bg-muted text-primary',
+                  )}
+                >
+                  <Icon className="h-5 w-5" />
+                </div>
                 {mode === recommended && <Badge variant="accent">Recommended</Badge>}
               </div>
-              <p className="font-medium text-foreground">{title}</p>
-              <p className="text-sm text-muted-foreground">{description}</p>
+              <p className="font-semibold text-foreground">{title}</p>
+              <p className="text-sm leading-relaxed text-muted-foreground">{description}</p>
             </CardContent>
           </Card>
         )

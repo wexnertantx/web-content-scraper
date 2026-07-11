@@ -188,12 +188,12 @@ export function ProjectDetails() {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
         <div className="min-w-0">
-          <h1 className="text-2xl font-semibold">{project.projectName}</h1>
+          <h1 className="truncate text-2xl font-bold text-foreground">{project.projectName}</h1>
           <a
             href={project.websiteUrl}
             target="_blank"
             rel="noreferrer"
-            className="mt-1 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+            className="mt-1 flex items-center gap-1 text-sm text-muted-foreground transition-colors duration-150 hover:text-primary"
           >
             <ExternalLink className="h-3.5 w-3.5" />
             {project.websiteUrl}
@@ -231,7 +231,7 @@ export function ProjectDetails() {
                   type="button"
                   onClick={() => setSelectedRunId(run.id)}
                   className={cn(
-                    'flex flex-col gap-1 rounded-md border px-3 py-2 text-left text-sm transition-colors',
+                    'flex flex-col gap-1 rounded-[var(--radius-md)] border px-3 py-2 text-left text-sm transition-colors duration-150',
                     run.id === selectedRunId
                       ? 'border-primary bg-primary/5'
                       : 'border-border hover:bg-muted',

@@ -25,7 +25,7 @@ export function FieldEditor({ fields, onChange }: FieldEditorProps) {
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2.5">
       {fields.map((field, index) => (
         <div key={index} className="flex items-center gap-2">
           <Input
@@ -53,6 +53,7 @@ export function FieldEditor({ fields, onChange }: FieldEditorProps) {
             size="sm"
             onClick={() => removeField(index)}
             aria-label="Remove field"
+            className="shrink-0 text-muted-foreground hover:text-error"
           >
             <Trash2 className="h-4 w-4" />
           </Button>
@@ -60,7 +61,9 @@ export function FieldEditor({ fields, onChange }: FieldEditorProps) {
       ))}
 
       {fields.length === 0 && (
-        <p className="text-sm text-muted-foreground">No fields yet. Add one below.</p>
+        <p className="rounded-[var(--radius-md)] border border-dashed border-border px-3 py-4 text-center text-sm text-muted-foreground">
+          No fields yet. Add one below.
+        </p>
       )}
 
       <Button type="button" variant="outline" size="sm" onClick={addField} className="self-start">

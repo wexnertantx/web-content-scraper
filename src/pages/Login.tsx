@@ -36,8 +36,11 @@ export function Login() {
 
   return (
     <AuthLayout>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)} noValidate>
-        <h1 className="text-lg font-semibold text-foreground">Log in</h1>
+      <form className="flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <div className="flex flex-col gap-1">
+          <h1 className="text-xl font-bold tracking-tight text-foreground">Welcome back</h1>
+          <p className="text-sm text-muted-foreground">Log in to continue to your account.</p>
+        </div>
 
         {submitError && <Alert variant="error">{submitError}</Alert>}
 
@@ -69,13 +72,13 @@ export function Login() {
           {errors.password && <p className="text-sm text-error">{errors.password.message}</p>}
         </div>
 
-        <Button type="submit" isLoading={isSubmitting} className="w-full">
+        <Button type="submit" isLoading={isSubmitting} className="mt-1 w-full">
           Sign In
         </Button>
 
         <p className="text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{' '}
-          <Link to="/register" className="font-medium text-primary hover:underline">
+          <Link to="/register" className="font-medium text-primary transition-colors duration-150 hover:text-primary/80 hover:underline">
             Register
           </Link>
         </p>

@@ -45,8 +45,8 @@ export function ResultViewer({
         )}
 
         {summary && (
-          <div className="rounded-md border border-border bg-muted p-4 text-sm">
-            <p className="mb-1 font-medium text-foreground">Summary</p>
+          <div className="rounded-[var(--radius-md)] border border-border bg-muted p-4 text-sm">
+            <p className="mb-1 font-semibold text-foreground">Summary</p>
             <p className="text-muted-foreground">{summary}</p>
           </div>
         )}
@@ -54,13 +54,15 @@ export function ResultViewer({
         {exportError && <Alert variant="error">{exportError}</Alert>}
 
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="inline-flex rounded-md border border-border p-1">
+          <div className="inline-flex rounded-[var(--radius-md)] border border-border bg-muted p-1">
             <button
               type="button"
               onClick={() => setTab('json')}
               className={cn(
-                'rounded-sm px-3 py-1.5 text-sm font-medium transition-colors',
-                tab === 'json' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground',
+                'rounded-[var(--radius-sm)] px-3 py-1.5 text-sm font-medium transition-colors duration-150',
+                tab === 'json'
+                  ? 'bg-primary text-primary-foreground shadow-[var(--shadow-sm)]'
+                  : 'text-muted-foreground hover:text-foreground',
               )}
             >
               JSON
@@ -69,9 +71,9 @@ export function ResultViewer({
               type="button"
               onClick={() => setTab('markdown')}
               className={cn(
-                'rounded-sm px-3 py-1.5 text-sm font-medium transition-colors',
+                'rounded-[var(--radius-sm)] px-3 py-1.5 text-sm font-medium transition-colors duration-150',
                 tab === 'markdown'
-                  ? 'bg-primary text-primary-foreground'
+                  ? 'bg-primary text-primary-foreground shadow-[var(--shadow-sm)]'
                   : 'text-muted-foreground hover:text-foreground',
               )}
             >
@@ -96,11 +98,11 @@ export function ResultViewer({
         </div>
 
         {tab === 'json' ? (
-          <pre className="max-h-[28rem] overflow-auto rounded-md border border-border bg-muted p-4 text-xs">
+          <pre className="max-h-[28rem] overflow-auto rounded-[var(--radius-md)] border border-border bg-muted p-4 font-mono text-xs leading-relaxed text-foreground">
             {JSON.stringify(result.jsonData ?? {}, null, 2)}
           </pre>
         ) : (
-          <pre className="max-h-[28rem] overflow-auto whitespace-pre-wrap rounded-md border border-border bg-muted p-4 text-xs">
+          <pre className="max-h-[28rem] overflow-auto whitespace-pre-wrap rounded-[var(--radius-md)] border border-border bg-muted p-4 font-mono text-xs leading-relaxed text-foreground">
             {result.markdownData || 'No markdown content available.'}
           </pre>
         )}

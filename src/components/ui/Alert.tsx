@@ -2,11 +2,11 @@ import { type HTMLAttributes } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
-const alertVariants = cva('rounded-md border px-4 py-3 text-sm', {
+const alertVariants = cva('rounded-[var(--radius-md)] border px-4 py-3 text-sm', {
   variants: {
     variant: {
-      error: 'border-error/30 bg-error/5 text-error',
-      success: 'border-success/30 bg-success/5 text-success',
+      error: 'border-error/20 bg-error/5 text-error',
+      success: 'border-success/20 bg-success/5 text-success',
       info: 'border-border bg-muted text-muted-foreground',
     },
   },

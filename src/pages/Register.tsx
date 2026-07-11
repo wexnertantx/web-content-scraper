@@ -37,8 +37,11 @@ export function Register() {
 
   return (
     <AuthLayout>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)} noValidate>
-        <h1 className="text-lg font-semibold text-foreground">Create an account</h1>
+      <form className="flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <div className="flex flex-col gap-1">
+          <h1 className="text-xl font-bold tracking-tight text-foreground">Create an account</h1>
+          <p className="text-sm text-muted-foreground">Start scraping and organizing web content in minutes.</p>
+        </div>
 
         {submitError && <Alert variant="error">{submitError}</Alert>}
 
@@ -81,13 +84,13 @@ export function Register() {
           {errors.password && <p className="text-sm text-error">{errors.password.message}</p>}
         </div>
 
-        <Button type="submit" isLoading={isSubmitting} className="w-full">
+        <Button type="submit" isLoading={isSubmitting} className="mt-1 w-full">
           Create Account
         </Button>
 
         <p className="text-center text-sm text-muted-foreground">
           Already have an account?{' '}
-          <Link to="/login" className="font-medium text-primary hover:underline">
+          <Link to="/login" className="font-medium text-primary transition-colors duration-150 hover:text-primary/80 hover:underline">
             Log in
           </Link>
         </p>

@@ -8,6 +8,7 @@ import { Alert } from '@/components/ui/Alert'
 import { Spinner } from '@/components/ui/Spinner'
 import { buttonVariants } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
+import { cn } from '@/lib/utils'
 
 export function ProjectHistory() {
   const [projects, setProjects] = useState<ProjectWithLatestRun[]>([])
@@ -52,7 +53,7 @@ export function ProjectHistory() {
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold">Projects</h1>
+          <h1 className="text-2xl font-bold text-foreground">Projects</h1>
           <p className="mt-1 text-sm text-muted-foreground">All of your scraping projects.</p>
         </div>
         <Link to="/scrape/new" className={buttonVariants({ variant: 'accent' })}>
@@ -80,7 +81,10 @@ export function ProjectHistory() {
       ) : (
         <div className="flex flex-col gap-3">
           {projects.map((project) => (
-            <div key={project.id} className={deletingId === project.id ? 'opacity-50' : undefined}>
+            <div
+              key={project.id}
+              className={cn('transition-opacity duration-200', deletingId === project.id && 'opacity-50')}
+            >
               <ProjectCard project={project} onDelete={handleDelete} />
             </div>
           ))}

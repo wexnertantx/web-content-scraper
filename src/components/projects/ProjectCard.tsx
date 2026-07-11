@@ -21,11 +21,14 @@ export function ProjectCard({
   onDelete?: (project: ProjectWithLatestRun) => void
 }) {
   return (
-    <Card>
+    <Card className="transition-all duration-200 hover:border-primary/30 hover:shadow-[var(--shadow-md)]">
       <CardContent className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <Link to={`/projects/${project.id}`} className="truncate text-base font-semibold hover:underline">
+            <Link
+              to={`/projects/${project.id}`}
+              className="truncate text-base font-semibold text-foreground transition-colors duration-150 hover:text-primary hover:underline"
+            >
               {project.projectName}
             </Link>
             {project.latestRun && <StatusBadge status={project.latestRun.status} />}
@@ -35,7 +38,7 @@ export function ProjectCard({
             target="_blank"
             rel="noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="mt-1 flex items-center gap-1 truncate text-sm text-muted-foreground hover:text-foreground"
+            className="mt-1 flex items-center gap-1 truncate text-sm text-muted-foreground transition-colors duration-150 hover:text-foreground"
           >
             <ExternalLink className="h-3.5 w-3.5 shrink-0" />
             <span className="truncate">{project.websiteUrl}</span>

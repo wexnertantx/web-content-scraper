@@ -216,8 +216,8 @@ export function NewScrape() {
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-semibold text-foreground">New Scrape</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-2xl font-bold text-foreground">New Scrape</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
           Paste a URL, let AI analyze the page, then choose what to extract.
         </p>
       </div>
@@ -247,8 +247,8 @@ export function NewScrape() {
               </div>
 
               {analyzing && (
-                <div className="flex items-center gap-3 rounded-md border border-border bg-muted px-4 py-3 text-sm text-muted-foreground">
-                  <Spinner className="h-4 w-4" />
+                <div className="flex items-center gap-3 rounded-[var(--radius-md)] border border-border bg-muted px-4 py-3 text-sm text-muted-foreground">
+                  <Spinner className="h-4 w-4 text-primary" />
                   <span>{analyzeMessage}</span>
                 </div>
               )}
@@ -300,7 +300,7 @@ export function NewScrape() {
               )}
 
               {(mode === 'structured' || mode === 'crawl') && (
-                <div className="flex flex-col gap-4 rounded-md border border-border p-4">
+                <div className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-border bg-muted/30 p-4">
                   <div className="flex flex-col gap-1.5">
                     <Label htmlFor="entityType">Entity type</Label>
                     <Input
@@ -387,8 +387,8 @@ export function NewScrape() {
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             {running && (
-              <div className="flex items-center gap-3 rounded-md border border-border bg-muted px-4 py-3 text-sm text-muted-foreground">
-                <Spinner className="h-4 w-4" />
+              <div className="flex items-center gap-3 rounded-[var(--radius-md)] border border-border bg-muted px-4 py-3 text-sm text-muted-foreground">
+                <Spinner className="h-4 w-4 text-primary" />
                 <span>{runMessage}</span>
               </div>
             )}

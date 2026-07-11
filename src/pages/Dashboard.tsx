@@ -9,6 +9,7 @@ import { Alert } from '@/components/ui/Alert'
 import { Spinner } from '@/components/ui/Spinner'
 import { buttonVariants } from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
+import { cn } from '@/lib/utils'
 
 const RECENT_PROJECTS_LIMIT = 5
 
@@ -56,10 +57,10 @@ export function Dashboard() {
   }
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-10">
       <div>
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
-        <p className="mt-1 text-sm text-muted-foreground">An overview of your scraping activity.</p>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Dashboard</h1>
+        <p className="mt-1.5 text-sm text-muted-foreground">An overview of your scraping activity.</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -80,18 +81,21 @@ export function Dashboard() {
       </div>
 
       <div>
-        <h2 className="mb-4 text-lg font-semibold">Recent Projects</h2>
+        <h2 className="mb-4 text-lg font-semibold tracking-tight text-foreground">Recent Projects</h2>
         {recentProjects.length === 0 ? (
           <Card>
-            <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
-              <p className="text-muted-foreground">You haven't created any projects yet.</p>
-              <Link to="/scrape/new" className={buttonVariants({ variant: 'accent' })}>
+            <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-[var(--radius-md)] bg-muted text-muted-foreground">
+                <FolderKanban className="h-6 w-6" />
+              </div>
+              <p className="font-medium text-foreground">You haven't created any projects yet.</p>
+              <p className="max-w-xs text-sm text-muted-foreground">
+                Start your first scrape to see projects and runs appear here.
+              </p>
+              <Link to="/scrape/new" className={cn(buttonVariants({ variant: 'accent' }), 'mt-2')}>
                 <Plus className="h-4 w-4" />
                 New Scrape
               </Link>
-              <p className="text-xs text-muted-foreground">
-                Use the "New Scrape" button in the navigation bar to get started.
-              </p>
             </CardContent>
           </Card>
         ) : (
