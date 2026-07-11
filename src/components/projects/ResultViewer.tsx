@@ -37,9 +37,13 @@ export function ResultViewer({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Scrape Result</CardTitle>
+        <CardTitle>{result.title || 'Scrape Result'}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
+        {result.summary && (
+          <p className="-mt-2 text-sm text-muted-foreground">{result.summary}</p>
+        )}
+
         {summary && (
           <div className="rounded-md border border-border bg-muted p-4 text-sm">
             <p className="mb-1 font-medium text-foreground">Summary</p>

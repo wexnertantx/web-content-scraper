@@ -5,7 +5,7 @@ const FIRECRAWL_API_KEY = Deno.env.get('FIRECRAWL_API_KEY')
 interface FirecrawlCrawlPage {
   markdown?: string
   json?: unknown
-  metadata?: { sourceURL?: string; url?: string }
+  metadata?: { sourceURL?: string; url?: string; title?: string }
 }
 
 Deno.serve(async (req) => {
@@ -39,6 +39,7 @@ Deno.serve(async (req) => {
           url: page.metadata?.sourceURL ?? page.metadata?.url ?? '',
           data: page.json ?? null,
           markdown: page.markdown ?? '',
+          title: page.metadata?.title ?? '',
         }))
       : undefined
 

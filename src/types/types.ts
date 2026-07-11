@@ -57,6 +57,7 @@ export interface CrawlPage {
   url: string
   data: unknown
   markdown: string
+  title: string
 }
 
 export interface CrawlStatusResult {
@@ -71,6 +72,8 @@ export interface ScrapedResult {
   runId: string
   jsonData: Record<string, unknown> | unknown[] | null
   markdownData: string | null
+  title: string | null
+  summary: string | null
   createdAt: string
 }
 

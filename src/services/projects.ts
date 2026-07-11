@@ -32,6 +32,8 @@ interface ScrapedResultRow {
   run_id: string
   json_data: unknown
   markdown_data: string | null
+  title: string | null
+  summary: string | null
   created_at: string
 }
 
@@ -64,6 +66,8 @@ function mapResult(row: ScrapedResultRow): ScrapedResult {
     runId: row.run_id,
     jsonData: row.json_data as ScrapedResult['jsonData'],
     markdownData: row.markdown_data,
+    title: row.title,
+    summary: row.summary,
     createdAt: row.created_at,
   }
 }
@@ -164,10 +168,17 @@ export async function saveScrapedResult(
   runId: string,
   jsonData: unknown,
   markdownData: string,
+  meta?: { title?: string | null; summary?: string | null },
 ): Promise<ScrapedResult> {
   const { data, error } = await supabase
     .from('scraped_results')
-    .insert({ run_id: runId, json_data: jsonData, markdown_data: markdownData })
+    .insert({
+      run_id: runId,
+      json_data: jsonData,
+      markdown_data: markdownData,
+      title: meta?.title || null,
+      summary: meta?.summary || null,
+    })
     .select()
     .single()
 

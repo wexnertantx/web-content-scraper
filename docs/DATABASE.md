@@ -49,6 +49,8 @@ by a trigger (`handle_new_user`) when a user signs up.
 | run_id | uuid | References `scrape_runs(id)` |
 | json_data | jsonb | Extracted structured data |
 | markdown_data | text | Full page markdown from Firecrawl |
+| title | text | Nullable. Page title from Firecrawl metadata (first page's title for crawl runs), added in `0003_result_metadata.sql` so the UI can read it without unpacking `json_data` |
+| summary | text | Nullable. Page meta description from Firecrawl (single-page scrapes only; not set for crawl runs) |
 | created_at | timestamptz | |
 
 ## Row Level Security

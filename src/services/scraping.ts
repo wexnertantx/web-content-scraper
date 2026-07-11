@@ -44,7 +44,10 @@ export async function runScrape(input: RunScrapeInput): Promise<ScrapedResult> {
       extractStructuredData({ url: input.url, entityType: input.entityType, fields }),
     ])
 
-    const result = await saveScrapedResult(run.id, jsonData, page.markdown)
+    const result = await saveScrapedResult(run.id, jsonData, page.markdown, {
+      title: page.title,
+      summary: page.description,
+    })
     await completeScrapeRun(run.id, 'success', `Extracted ${fields.length} field(s) from ${input.url}.`)
     return result
   } catch (err) {
@@ -96,7 +99,9 @@ export async function pollCrawl(run: ScrapeRun): Promise<CrawlStatusResult> {
     const existing = await getScrapedResult(run.id)
     if (!existing) {
       const rows = flattenCrawlPages(status.pages)
-      await saveScrapedResult(run.id, rows, combineCrawlMarkdown(status.pages))
+      await saveScrapedResult(run.id, rows, combineCrawlMarkdown(status.pages), {
+        title: status.pages?.[0]?.title,
+      })
       await completeScrapeRun(run.id, 'success', `Crawled ${rows.length} page(s) from this site.`)
     }
   } else if (status.status === 'failed' || status.status === 'cancelled') {
