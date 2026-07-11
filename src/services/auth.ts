@@ -48,7 +48,7 @@ export async function loginUser({ email, password }: LoginInput): Promise<AppUse
 
   if (error) {
     if (error.code === 'email_not_confirmed') {
-      throw new Error(`Please verify your email, there has been an email sent to ${email}`)
+      throw new Error(`Please verify your email — check the inbox for ${email} for your confirmation link.`)
     }
     throw new Error('Invalid email or password.')
   }
