@@ -30,7 +30,12 @@ export function toAppUserOrNull(user: SupabaseUserLike | null | undefined): AppU
   return user ? toAppUser(user) : null
 }
 
-export async function registerUser({ fullName, email, password }: RegisterInput): Promise<AppUser> {
+export interface RegisterResult {
+  user: AppUser | null
+  needsEmailConfirmation: boolean
+}
+
+export async function registerUser({ fullName, email, password }: RegisterInput): Promise<RegisterResult> {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -40,7 +45,15 @@ export async function registerUser({ fullName, email, password }: RegisterInput)
   if (error) throw new Error(error.message || 'Could not create your account. Please try again.')
   if (!data.user) throw new Error('Registration failed. Please try again.')
 
-  return toAppUser(data.user)
+  // When email confirmation is enabled, signUp creates the user but returns no
+  // session — the account isn't usable until the email is verified. Surface
+  // that instead of treating them as signed in, which would drop them into the
+  // app where every authenticated call fails with "You must be signed in."
+  if (!data.session) {
+    return { user: null, needsEmailConfirmation: true }
+  }
+
+  return { user: toAppUser(data.user), needsEmailConfirmation: false }
 }
 
 export async function loginUser({ email, password }: LoginInput): Promise<AppUser> {

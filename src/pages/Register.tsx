@@ -18,6 +18,7 @@ export function Register() {
   const { register: registerUser } = useAuth()
   const navigate = useNavigate()
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [notice, setNotice] = useState<string | null>(null)
 
   const {
     register,
@@ -27,8 +28,15 @@ export function Register() {
 
   async function onSubmit(values: RegisterFormValues) {
     setSubmitError(null)
+    setNotice(null)
     try {
-      await registerUser(values)
+      const { needsEmailConfirmation } = await registerUser(values)
+      if (needsEmailConfirmation) {
+        setNotice(
+          `Account created. Please verify your email — check the inbox for ${values.email} — then log in.`,
+        )
+        return
+      }
       navigate('/dashboard')
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
@@ -44,6 +52,7 @@ export function Register() {
         </div>
 
         {submitError && <Alert variant="error">{submitError}</Alert>}
+        {notice && <Alert variant="success">{notice}</Alert>}
 
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="fullName">Full Name</Label>

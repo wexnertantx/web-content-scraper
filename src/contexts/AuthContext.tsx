@@ -7,7 +7,7 @@ import type { LoginInput, RegisterInput } from '@/services/auth'
 export interface AuthContextValue {
   user: AppUser | null
   isLoading: boolean
-  register: (input: RegisterInput) => Promise<void>
+  register: (input: RegisterInput) => Promise<{ needsEmailConfirmation: boolean }>
   login: (input: LoginInput) => Promise<void>
   logout: () => Promise<void>
 }
@@ -37,8 +37,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   async function register(input: RegisterInput) {
-    const registeredUser = await registerUser(input)
-    setUser(registeredUser)
+    const { user: registeredUser, needsEmailConfirmation } = await registerUser(input)
+    if (registeredUser) setUser(registeredUser)
+    return { needsEmailConfirmation }
   }
 
   async function login(input: LoginInput) {
