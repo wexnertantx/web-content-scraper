@@ -21,7 +21,7 @@ export function AppLayout() {
               <span className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-md)] bg-primary text-primary-foreground">
                 <FileSearch className="h-4 w-4" />
               </span>
-              <span className="hidden text-base font-bold tracking-tight sm:inline">Website Content Scraper</span>
+              <span className="hidden text-base font-bold tracking-tight sm:inline">UrlIntelligence</span>
             </Link>
             <nav className="hidden items-center gap-1 md:flex">
               {navItems.map(({ to, label, icon: Icon }) => (

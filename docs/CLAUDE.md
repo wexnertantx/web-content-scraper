@@ -28,7 +28,7 @@ Behave like an experienced software engineer.
 
 # Project Goal
 
-Build an MVP of an AI-powered Website Content Scraper.
+Build an MVP of an AI-powered website content scraper called UrlIntelligence.
 
 The application should enable non-technical users to scrape websites using AI without writing code.
 

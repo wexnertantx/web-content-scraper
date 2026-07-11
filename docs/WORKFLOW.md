@@ -1,6 +1,6 @@
 # WORKFLOW.md
 
-# Website Content Scraper MVP
+# UrlIntelligence MVP
 
 Version: 1.0
 

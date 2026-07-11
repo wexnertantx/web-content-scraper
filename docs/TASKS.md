@@ -1,6 +1,6 @@
 # TASKS.md
 
-# Website Content Scraper MVP
+# UrlIntelligence MVP
 
 Project Status
 

@@ -1,6 +1,6 @@
 # PROMPTS.md
 
-# Website Content Scraper MVP
+# UrlIntelligence MVP
 
 Version: 1.0
 
@@ -21,7 +21,7 @@ real OpenAI model; the edge functions default to `gpt-4o-mini` via an
 
 # Purpose
 
-This document contains all AI prompts used by the Website Content Scraper.
+This document contains all AI prompts used by UrlIntelligence.
 
 Guidelines:
 

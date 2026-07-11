@@ -1,4 +1,4 @@
-# Website Content Scraper
+# UrlIntelligence
 
 An AI-powered web application that enables non-technical users to extract structured information from websites without writing code.
 

@@ -9,7 +9,7 @@ export function AuthLayout({ children }: { children: ReactNode }) {
           <span className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-md)] bg-primary text-primary-foreground">
             <FileSearch className="h-5 w-5" />
           </span>
-          <span className="text-xl font-bold tracking-tight text-foreground">Website Content Scraper</span>
+          <span className="text-xl font-bold tracking-tight text-foreground">UrlIntelligence</span>
         </div>
         <div className="rounded-[var(--radius-lg)] border border-border bg-card p-6 shadow-[var(--shadow-md)] sm:p-8">
           {children}

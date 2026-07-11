@@ -1,6 +1,6 @@
 # PROJECT.md
 
-# Website Content Scraper MVP
+# UrlIntelligence MVP
 
 Version: 1.0
 
@@ -16,7 +16,7 @@ to validating the product.
 
 Avoid unnecessary complexity.
 
-Website Content Scraper is an AI-powered SaaS application that allows non-technical users to extract structured information from websites without writing code.
+UrlIntelligence is an AI-powered SaaS application that allows non-technical users to extract structured information from websites without writing code.
 
 The goal is to make website scraping as simple as:
 
